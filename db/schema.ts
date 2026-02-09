@@ -10,6 +10,10 @@ import {
   pgEnum
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
+
+const client = postgres(process.env.DATABASE_URL!);
 
 // Optionnel : Enum pour le statut du ticket
 export const ticketStatusEnum = pgEnum('ticket_status', ['valid', 'used', 'cancelled']);
@@ -82,3 +86,53 @@ export const ticketsRelations = relations(ticketsTable, ({ one }) => ({
     references: [eventsTable.id],
   }),
 }));
+
+// --- TABLES REQUISES PAR BETTER-AUTH ---
+
+export const sessionsTable = pgTable("session", {
+    id: varchar("id", { length: 255 }).primaryKey(),
+    expiresAt: timestamp("expires_at").notNull(),
+    token: varchar("token", { length: 255 }).notNull().unique(),
+    createdAt: timestamp("created_at").notNull(),
+    updatedAt: timestamp("updated_at").notNull(),
+    ipAddress: varchar("ip_address", { length: 255 }),
+    userAgent: varchar("user_agent", { length: 255 }),
+    userId: integer("user_id").notNull().references(() => usersTable.id),
+});
+
+export const accountsTable = pgTable("account", {
+    id: varchar("id", { length: 255 }).primaryKey(),
+    accountId: varchar("account_id", { length: 255 }).notNull(),
+    providerId: varchar("provider_id", { length: 255 }).notNull(),
+    userId: integer("user_id").notNull().references(() => usersTable.id),
+    accessToken: varchar("access_token", { length: 255 }),
+    refreshToken: varchar("refresh_token", { length: 255 }),
+    idToken: varchar("id_token", { length: 255 }),
+    accessTokenExpiresAt: timestamp("access_token_expires_at"),
+    refreshTokenExpiresAt: timestamp("refresh_token_expires_at"),
+    scope: varchar("scope", { length: 255 }),
+    password: varchar("password", { length: 255 }), // Important pour la connexion email/pass
+    createdAt: timestamp("created_at").notNull(),
+    updatedAt: timestamp("updated_at").notNull(),
+});
+
+export const verificationsTable = pgTable("verification", {
+    id: varchar("id", { length: 255 }).primaryKey(),
+    identifier: varchar("identifier", { length: 255 }).notNull(),
+    value: varchar("value", { length: 255 }).notNull(),
+    expiresAt: timestamp("expires_at").notNull(),
+    createdAt: timestamp("created_at"),
+    updatedAt: timestamp("updated_at"),
+});
+
+// --- DRIZZLE DATABASE INSTANCE ---
+export const db = drizzle(client, { 
+  schema: { 
+    usersTable, 
+    eventsTable, 
+    ticketsTable, 
+    sessionsTable, 
+    accountsTable, 
+    verificationsTable 
+  } 
+});
