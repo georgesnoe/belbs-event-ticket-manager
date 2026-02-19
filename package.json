@@ -16,6 +16,7 @@
     "@neondatabase/serverless": "^1.0.2",
     "@react-router/node": "7.12.0",
     "@react-router/serve": "7.12.0",
+    "better-auth": "^1.4.18",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dotenv": "^17.3.1",
