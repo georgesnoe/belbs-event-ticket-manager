@@ -101,7 +101,9 @@ export default function AdminLayout({ loaderData }: Route.ComponentProps) {
 							>
 								<Link to="/">
 									<ShowerHeadIcon className="!size-5" />
-									<span className="text-base font-semibold">Acme Inc.</span>
+									<span className="text-base font-semibold">
+										BeLBS Event Admin
+									</span>
 								</Link>
 							</SidebarMenuButton>
 						</SidebarMenuItem>
@@ -240,14 +242,14 @@ export default function AdminLayout({ loaderData }: Route.ComponentProps) {
 								size="sm"
 								className="hidden sm:flex"
 							>
-								<Link
-									to="/admin/scan-qr"
-									rel="noopener noreferrer"
-									target="_blank"
-									className="dark:text-foreground"
-								>
-									Scanner un code QR
-								</Link>
+								<NavLink to="/admin/scan-qr" className="dark:text-foreground">
+									{({ isPending }) => (
+										<>
+											{isPending && <Spinner />}
+											Scanner un code QR
+										</>
+									)}
+								</NavLink>
 							</Button>
 						</div>
 					</div>
