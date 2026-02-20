@@ -3,6 +3,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "~/lib/db.server";
 
 export const auth = betterAuth({
+	trustedOrigins: ["http://localhost:5173"],
 	database: drizzleAdapter(db, {
 		provider: "pg",
 	}),
@@ -13,6 +14,7 @@ export const auth = betterAuth({
 		google: {
 			clientId: process.env.GOOGLE_CLIENT_ID as string,
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+			accessType: "offline",
 		},
 	},
 	user: {
