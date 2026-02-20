@@ -3,26 +3,26 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "~/lib/db.server";
 
 export const auth = betterAuth({
-  database: drizzleAdapter(db, {
-    provider: "pg",
-  }),
-  emailAndPassword: {
-    enabled: true,
-  },
-  socialProviders: {
-    google: {
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-    }
-  },
-  user: {
-    additionalFields: {
-      role: {
-        type: "string",
-        defaultValue: "user",
-        required: true,
-        input: false
-      }
-    }
-  },
+	database: drizzleAdapter(db, {
+		provider: "pg",
+	}),
+	emailAndPassword: {
+		enabled: true,
+	},
+	socialProviders: {
+		google: {
+			clientId: process.env.GOOGLE_CLIENT_ID as string,
+			clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+		},
+	},
+	user: {
+		additionalFields: {
+			role: {
+				type: "string",
+				defaultValue: "user",
+				required: true,
+				input: false,
+			},
+		},
+	},
 });
